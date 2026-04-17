@@ -1,0 +1,159 @@
+{% extends 'dashboard/layout_prof.html' %}
+{% block page_title %}Démarrer la Séance{% endblock %}
+{% block page_subtitle %}Capture de votre position GPS{% endblock %}
+
+{% block prof_content %}
+<div class="max-w-lg mx-auto">
+    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+
+        <div class="bg-gradient-to-r from-green-600 to-green-700 p-6 text-center">
+            <div class="w-16 h-16 bg-white bg-opacity-20 rounded-full 
+                        flex items-center justify-center mx-auto mb-3">
+                <i class="fas fa-map-marker-alt text-white text-3xl"></i>
+            </div>
+            <h2 class="text-white font-bold text-xl">Capture GPS</h2>
+            <p class="text-green-200 text-sm mt-1">
+                {{ seance.matiere.nom }} · {{ seance.date_seance }}
+            </p>
+        </div>
+
+        <div class="p-6">
+
+            <!-- Statut GPS -->
+            <div id="gps-status" class="text-center mb-6">
+                <div class="w-20 h-20 bg-gray-100 rounded-full flex items-center 
+                            justify-center mx-auto mb-4" id="gps-icon-container">
+                    <i class="fas fa-satellite-dish text-gray-400 text-3xl" 
+                       id="gps-icon"></i>
+                </div>
+                <p class="font-semibold text-gray-700" id="gps-message">
+                    Cliquez sur le bouton pour capturer votre position
+                </p>
+                <p class="text-gray-400 text-sm mt-1" id="gps-coords"></p>
+            </div>
+
+            <!-- Formulaire caché -->
+            <form method="POST" id="demarrer-form">
+                {% csrf_token %}
+                <input type="hidden" name="latitude"  id="latitude-input">
+                <input type="hidden" name="longitude" id="longitude-input">
+
+                <!-- Bouton Capturer GPS -->
+                <button type="button" onclick="capturerGPS()"
+                        id="btn-gps"
+                        class="btn w-full py-4 bg-blue-600 text-white rounded-xl
+                               font-semibold hover:bg-blue-700 mb-4
+                               flex items-center justify-center gap-3 text-lg">
+                    <i class="fas fa-crosshairs"></i>
+                    Capturer ma position GPS
+                </button>
+
+                <!-- Bouton Démarrer (caché jusqu'à la capture GPS) -->
+                <button type="submit" id="btn-demarrer"
+                        class="btn w-full py-4 bg-green-600 text-white rounded-xl
+                               font-semibold hover:bg-green-700 hidden
+                               flex items-center justify-center gap-3 text-lg">
+                    <i class="fas fa-play-circle"></i>
+                    Démarrer la séance maintenant !
+                </button>
+            </form>
+
+            <!-- Infos séance -->
+            <div class="mt-6 p-4 bg-gray-50 rounded-xl space-y-2">
+                <div class="flex justify-between text-sm">
+                    <span class="text-gray-500">Matière</span>
+                    <span class="font-semibold text-gray-800">
+                        {{ seance.matiere.nom }}
+                    </span>
+                </div>
+                <div class="flex justify-between text-sm">
+                    <span class="text-gray-500">Niveau</span>
+                    <span class="font-semibold text-gray-800">
+                        {{ seance.matiere.niveau }}
+                    </span>
+                </div>
+                <div class="flex justify-between text-sm">
+                    <span class="text-gray-500">Rayon autorisé</span>
+                    <span class="font-semibold text-blue-600">
+                        {{ seance.rayon_metres }} mètres
+                    </span>
+                </div>
+                <div class="flex justify-between text-sm">
+                    <span class="text-gray-500">Durée du code</span>
+                    <span class="font-semibold text-gray-800">
+                        {{ seance.duree_code_minutes }} minutes
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    function capturerGPS() {
+        const btnGPS        = document.getElementById('btn-gps');
+        const gpsMessage    = document.getElementById('gps-message');
+        const gpsCoords     = document.getElementById('gps-coords');
+        const gpsIcon       = document.getElementById('gps-icon');
+        const gpsContainer  = document.getElementById('gps-icon-container');
+
+        // État : chargement
+        btnGPS.disabled     = true;
+        btnGPS.innerHTML    = '<i class="fas fa-spinner fa-spin"></i> Localisation en cours...';
+        gpsMessage.textContent = "Récupération de votre position GPS...";
+
+        if (!navigator.geolocation) {
+            gpsMessage.textContent = "❌ Géolocalisation non supportée par votre navigateur.";
+            btnGPS.disabled = false;
+            return;
+        }
+
+        navigator.geolocation.getCurrentPosition(
+            // Succès
+            function(position) {
+                const lat = position.coords.latitude;
+                const lon = position.coords.longitude;
+                const acc = position.coords.accuracy;
+
+                // Rempli les champs cachés
+                document.getElementById('latitude-input').value  = lat;
+                document.getElementById('longitude-input').value = lon;
+
+                // Mise à jour de l'UI
+                gpsContainer.className = 'w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4';
+                gpsIcon.className      = 'fas fa-check-circle text-green-500 text-3xl';
+                gpsMessage.textContent = "✅ Position GPS capturée avec succès !";
+                gpsMessage.className   = 'font-semibold text-green-700';
+                gpsCoords.textContent  = `Lat: ${lat.toFixed(6)} | Lon: ${lon.toFixed(6)} | Précision: ${acc.toFixed(0)}m`;
+
+                // Affiche le bouton démarrer
+                btnGPS.classList.add('hidden');
+                document.getElementById('btn-demarrer').classList.remove('hidden');
+            },
+            // Erreur
+            function(error) {
+                let msg = "❌ Impossible de récupérer votre position.";
+                if (error.code === 1) msg = "❌ Géolocalisation refusée. Autorisez-la dans votre navigateur.";
+                if (error.code === 2) msg = "❌ Position indisponible. Vérifiez votre GPS.";
+                if (error.code === 3) msg = "❌ Délai dépassé. Réessayez.";
+
+                gpsContainer.className = 'w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4';
+                gpsIcon.className      = 'fas fa-times-circle text-red-500 text-3xl';
+                gpsMessage.textContent = msg;
+                gpsMessage.className   = 'font-semibold text-red-700';
+
+                btnGPS.disabled     = false;
+                btnGPS.innerHTML    = '<i class="fas fa-redo"></i> Réessayer';
+            },
+            // Options
+            {
+                enableHighAccuracy: true,
+                timeout:            15000,
+                maximumAge:         0
+            }
+        );
+    }
+</script>
+{% endblock %}

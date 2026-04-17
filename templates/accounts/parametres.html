@@ -1,0 +1,100 @@
+{% extends 'dashboard/layout_admin.html' %}
+{% block page_title %}Paramètres{% endblock %}
+{% block page_subtitle %}Configuration globale de la plateforme{% endblock %}
+
+{% block admin_content %}
+<div class="max-w-2xl mx-auto space-y-6">
+
+    <!-- GPS -->
+    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+        <div class="bg-gradient-to-r from-blue-600 to-blue-700 p-4">
+            <div class="flex items-center gap-2">
+                <i class="fas fa-map-marker-alt text-white"></i>
+                <h3 class="text-white font-semibold">Géolocalisation</h3>
+            </div>
+        </div>
+        <div class="p-6 space-y-4">
+            <div class="flex items-center justify-between p-4 bg-gray-50 rounded-xl">
+                <div>
+                    <p class="font-semibold text-gray-800 text-sm">Rayon GPS autorisé</p>
+                    <p class="text-xs text-gray-500">
+                        Distance maximale entre l'étudiant et le professeur
+                    </p>
+                </div>
+                <div class="flex items-center gap-2">
+                    <span class="text-2xl font-bold text-blue-600">{{ gps_radius }}</span>
+                    <span class="text-gray-500 text-sm">mètres</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Codes -->
+    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+        <div class="bg-gradient-to-r from-green-600 to-green-700 p-4">
+            <div class="flex items-center gap-2">
+                <i class="fas fa-key text-white"></i>
+                <h3 class="text-white font-semibold">Codes de présence</h3>
+            </div>
+        </div>
+        <div class="p-6 space-y-4">
+            <div class="flex items-center justify-between p-4 bg-gray-50 rounded-xl">
+                <div>
+                    <p class="font-semibold text-gray-800 text-sm">Durée de validité du code</p>
+                    <p class="text-xs text-gray-500">
+                        Temps avant expiration automatique du code
+                    </p>
+                </div>
+                <div class="flex items-center gap-2">
+                    <span class="text-2xl font-bold text-green-600">{{ code_duration }}</span>
+                    <span class="text-gray-500 text-sm">minutes</span>
+                </div>
+            </div>
+            <div class="flex items-center justify-between p-4 bg-gray-50 rounded-xl">
+                <div>
+                    <p class="font-semibold text-gray-800 text-sm">Seuil de retard</p>
+                    <p class="text-xs text-gray-500">
+                        Après combien de minutes considérer un pointage comme retard
+                    </p>
+                </div>
+                <div class="flex items-center gap-2">
+                    <span class="text-2xl font-bold text-orange-600">{{ late_threshold }}</span>
+                    <span class="text-gray-500 text-sm">minutes</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Absences -->
+    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+        <div class="bg-gradient-to-r from-red-600 to-red-700 p-4">
+            <div class="flex items-center gap-2">
+                <i class="fas fa-exclamation-triangle text-white"></i>
+                <h3 class="text-white font-semibold">Seuils d'alertes</h3>
+            </div>
+        </div>
+        <div class="p-6 space-y-4">
+            <div class="flex items-center justify-between p-4 bg-red-50 rounded-xl border border-red-100">
+                <div>
+                    <p class="font-semibold text-gray-800 text-sm">Seuil d'absences global</p>
+                    <p class="text-xs text-gray-500">
+                        Nombre d'absences maximum avant zone rouge
+                    </p>
+                </div>
+                <div class="flex items-center gap-2">
+                    <span class="text-2xl font-bold text-red-600">{{ absence_threshold }}</span>
+                    <span class="text-gray-500 text-sm">absences</span>
+                </div>
+            </div>
+            <div class="bg-yellow-50 border border-yellow-200 rounded-xl p-4">
+                <p class="text-yellow-800 text-sm">
+                    <i class="fas fa-info-circle mr-2"></i>
+                    Le seuil peut être personnalisé par matière dans la section 
+                    <strong>Matières</strong>.
+                </p>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

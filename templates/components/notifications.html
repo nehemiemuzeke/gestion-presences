@@ -1,0 +1,50 @@
+<!-- Centre de notifications -->
+<div class="relative" x-data="{ open: false }">
+    <button onclick="toggleNotifications()"
+            id="notif-btn"
+            class="relative p-2 text-gray-500 hover:text-blue-600 
+                   hover:bg-blue-50 rounded-xl transition-all duration-200">
+        <i class="fas fa-bell text-lg"></i>
+        <span id="notif-badge"
+              class="absolute top-1 right-1 w-4 h-4 bg-red-500 
+                     text-white text-xs rounded-full 
+                     flex items-center justify-center
+                     {% if nb_notifications == 0 %}hidden{% endif %}">
+            {{ nb_notifications }}
+        </span>
+    </button>
+
+    <!-- Dropdown notifications -->
+    <div id="notif-dropdown"
+         class="hidden absolute right-0 top-12 w-80 bg-white rounded-2xl 
+                shadow-2xl border border-gray-100 z-50 overflow-hidden">
+
+        <!-- Header -->
+        <div class="flex items-center justify-between p-4 border-b border-gray-100">
+            <h3 class="font-semibold text-gray-800">Notifications</h3>
+            {% if nb_notifications > 0 %}
+            <button onclick="marquerToutesLues()"
+                    class="text-xs text-blue-600 hover:text-blue-800 font-medium">
+                Tout marquer lu
+            </button>
+            {% endif %}
+        </div>
+
+        <!-- Liste -->
+        <div id="notif-list" class="max-h-80 overflow-y-auto divide-y divide-gray-50">
+            <!-- Chargé via AJAX -->
+            <div class="p-4 text-center text-gray-400 text-sm">
+                <i class="fas fa-spinner fa-spin mr-2"></i>
+                Chargement...
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="p-3 border-t border-gray-100 text-center">
+            <a href="{% url 'notifications_list' %}"
+               class="text-sm text-blue-600 hover:text-blue-800 font-medium">
+                Voir toutes les notifications
+            </a>
+        </div>
+    </div>
+</div>

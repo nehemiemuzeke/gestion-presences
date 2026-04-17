@@ -1,0 +1,331 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="flex h-screen bg-gray-100 overflow-hidden">
+
+    <!-- ═══════════════════════════════════════════ -->
+    <!-- SIDEBAR ADMIN                               -->
+    <!-- ═══════════════════════════════════════════ -->
+    <aside class="w-64 bg-gradient-to-b from-slate-800 to-slate-900 
+                  flex flex-col fixed h-full z-30 shadow-2xl">
+
+        <!-- Logo -->
+        <div class="flex items-center gap-3 p-6 border-b border-slate-700">
+            <div class="w-10 h-10 bg-blue-500 rounded-xl 
+                        flex items-center justify-center">
+                <i class="fas fa-graduation-cap text-white text-lg"></i>
+            </div>
+            <div>
+                <h1 class="text-white font-bold text-sm leading-tight">
+                    Gestion
+                </h1>
+                <p class="text-blue-300 text-xs">des Présences</p>
+            </div>
+        </div>
+
+        <!-- Profil Admin -->
+        <div class="flex items-center gap-3 p-4 mx-3 mt-3 
+                    bg-slate-700 bg-opacity-50 rounded-xl">
+            <div class="w-9 h-9 bg-red-500 rounded-full 
+                        flex items-center justify-center
+                        text-white font-bold text-sm flex-shrink-0">
+                {{ request.user.first_name|first|upper }}{{ request.user.last_name|first|upper }}
+            </div>
+            <div class="overflow-hidden">
+                <p class="text-white text-xs font-semibold truncate">
+                    {{ request.user.nom_complet }}
+                </p>
+                <span class="text-xs bg-red-500 text-white 
+                             px-2 py-0.5 rounded-full">
+                    Admin
+                </span>
+            </div>
+        </div>
+
+        <!-- Navigation -->
+        <nav class="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
+
+            <!-- Dashboard -->
+            <a href="{% url 'admin_dashboard' %}"
+               class="sidebar-link flex items-center gap-3 px-4 py-2.5 
+                      rounded-xl text-slate-300 hover:bg-slate-700 
+                      hover:text-white transition-all duration-200 text-sm">
+                <i class="fas fa-chart-pie w-5 text-center"></i>
+                <span>Tableau de bord</span>
+            </a>
+
+            <!-- Structure académique -->
+            <div class="pt-3 pb-1">
+                <p class="text-slate-500 text-xs font-semibold 
+                          uppercase tracking-wider px-4">
+                    Structure académique
+                </p>
+            </div>
+
+            <a href="{% url 'admin_departements' %}"
+               class="sidebar-link flex items-center gap-3 px-4 py-2.5 
+                      rounded-xl text-slate-300 hover:bg-slate-700 
+                      hover:text-white transition-all duration-200 text-sm">
+                <i class="fas fa-building w-5 text-center"></i>
+                <span>Départements</span>
+            </a>
+
+            <a href="{% url 'admin_filieres' %}"
+               class="sidebar-link flex items-center gap-3 px-4 py-2.5 
+                      rounded-xl text-slate-300 hover:bg-slate-700 
+                      hover:text-white transition-all duration-200 text-sm">
+                <i class="fas fa-sitemap w-5 text-center"></i>
+                <span>Filières</span>
+            </a>
+
+            <a href="{% url 'admin_niveaux' %}"
+               class="sidebar-link flex items-center gap-3 px-4 py-2.5 
+                      rounded-xl text-slate-300 hover:bg-slate-700 
+                      hover:text-white transition-all duration-200 text-sm">
+                <i class="fas fa-layer-group w-5 text-center"></i>
+                <span>Niveaux</span>
+            </a>
+
+            <a href="{% url 'admin_matieres' %}"
+               class="sidebar-link flex items-center gap-3 px-4 py-2.5 
+                      rounded-xl text-slate-300 hover:bg-slate-700 
+                      hover:text-white transition-all duration-200 text-sm">
+                <i class="fas fa-book w-5 text-center"></i>
+                <span>Matières</span>
+            </a>
+
+            <!-- Utilisateurs -->
+            <div class="pt-3 pb-1">
+                <p class="text-slate-500 text-xs font-semibold 
+                          uppercase tracking-wider px-4">
+                    Utilisateurs
+                </p>
+            </div>
+
+            <a href="{% url 'admin_professeurs' %}"
+               class="sidebar-link flex items-center gap-3 px-4 py-2.5 
+                      rounded-xl text-slate-300 hover:bg-slate-700 
+                      hover:text-white transition-all duration-200 text-sm">
+                <i class="fas fa-chalkboard-teacher w-5 text-center"></i>
+                <span>Professeurs</span>
+            </a>
+
+            <a href="{% url 'admin_etudiants' %}"
+               class="sidebar-link flex items-center gap-3 px-4 py-2.5 
+                      rounded-xl text-slate-300 hover:bg-slate-700 
+                      hover:text-white transition-all duration-200 text-sm">
+                <i class="fas fa-user-graduate w-5 text-center"></i>
+                <span>Étudiants</span>
+                {% if nb_zone_rouge %}
+                <span class="ml-auto bg-red-500 text-white text-xs 
+                             rounded-full w-5 h-5 flex items-center 
+                             justify-center">
+                    {{ nb_zone_rouge }}
+                </span>
+                {% endif %}
+            </a>
+
+            <!-- Présences -->
+            <div class="pt-3 pb-1">
+                <p class="text-slate-500 text-xs font-semibold 
+                          uppercase tracking-wider px-4">
+                    Présences
+                </p>
+            </div>
+
+            <a href="{% url 'admin_zone_rouge' %}"
+               class="sidebar-link flex items-center gap-3 px-4 py-2.5 
+                      rounded-xl text-slate-300 hover:bg-red-900 
+                      hover:text-red-300 transition-all duration-200 text-sm">
+                <i class="fas fa-exclamation-triangle w-5 
+                          text-center text-red-400"></i>
+                <span class="text-red-400">Zone Rouge</span>
+            </a>
+
+            <a href="{% url 'notifications_list' %}"
+               class="sidebar-link flex items-center gap-3 px-4 py-2.5 
+                      rounded-xl text-slate-300 hover:bg-slate-700 
+                      hover:text-white transition-all duration-200 text-sm">
+                <i class="fas fa-bell w-5 text-center"></i>
+                <span>Notifications</span>
+                {% if nb_notifications %}
+                <span class="ml-auto bg-blue-500 text-white text-xs 
+                             rounded-full w-5 h-5 flex items-center 
+                             justify-center">
+                    {{ nb_notifications }}
+                </span>
+                {% endif %}
+            </a>
+
+            <!-- Système -->
+            <div class="pt-3 pb-1">
+                <p class="text-slate-500 text-xs font-semibold 
+                          uppercase tracking-wider px-4">
+                    Système
+                </p>
+            </div>
+
+            <a href="{% url 'admin_parametres' %}"
+               class="sidebar-link flex items-center gap-3 px-4 py-2.5 
+                      rounded-xl text-slate-300 hover:bg-slate-700 
+                      hover:text-white transition-all duration-200 text-sm">
+                <i class="fas fa-cog w-5 text-center"></i>
+                <span>Paramètres</span>
+            </a>
+
+            <a href="{% url 'profil' %}"
+               class="sidebar-link flex items-center gap-3 px-4 py-2.5 
+                      rounded-xl text-slate-300 hover:bg-slate-700 
+                      hover:text-white transition-all duration-200 text-sm">
+                <i class="fas fa-user w-5 text-center"></i>
+                <span>Mon profil</span>
+            </a>
+
+        </nav>
+
+        <!-- Déconnexion -->
+        <div class="p-3 border-t border-slate-700">
+            <a href="{% url 'logout' %}"
+               class="flex items-center gap-3 px-4 py-2.5 rounded-xl
+                      text-slate-400 hover:bg-red-900 hover:bg-opacity-50 
+                      hover:text-red-300 transition-all duration-200 text-sm">
+                <i class="fas fa-sign-out-alt w-5 text-center"></i>
+                <span>Déconnexion</span>
+            </a>
+        </div>
+    </aside>
+
+    <!-- ═══════════════════════════════════════════ -->
+    <!-- CONTENU PRINCIPAL                           -->
+    <!-- ═══════════════════════════════════════════ -->
+    <div class="flex-1 flex flex-col ml-64 overflow-hidden">
+
+        <!-- Header -->
+        <header class="bg-white shadow-sm z-20 flex-shrink-0">
+            <div class="flex items-center justify-between px-6 py-4">
+
+                <!-- Titre de la page -->
+                <div>
+                    <h2 class="text-lg font-semibold text-gray-800">
+                        {% block page_title %}Dashboard{% endblock %}
+                    </h2>
+                    <p class="text-xs text-gray-500">
+                        {% block page_subtitle %}Vue d'ensemble{% endblock %}
+                    </p>
+                </div>
+
+                <!-- Actions header -->
+                <div class="flex items-center gap-4">
+
+                    <!-- Date et heure -->
+                    <div class="hidden md:flex items-center gap-2 
+                                text-gray-500 text-sm">
+                        <i class="fas fa-calendar-alt text-blue-500"></i>
+                        <span id="current-datetime"></span>
+                    </div>
+
+                    <!-- Notifications dropdown -->
+                    <div class="relative">
+                        <button onclick="toggleNotifications()"
+                                id="notif-btn"
+                                class="relative p-2 text-gray-500 
+                                       hover:text-blue-600 hover:bg-blue-50 
+                                       rounded-xl transition-all duration-200">
+                            <i class="fas fa-bell text-lg"></i>
+                            <span id="notif-badge"
+                                  class="absolute top-1 right-1 w-4 h-4 
+                                         bg-red-500 text-white text-xs 
+                                         rounded-full flex items-center 
+                                         justify-center
+                                         {% if not nb_notifications %}hidden{% endif %}">
+                                {{ nb_notifications|default:"0" }}
+                            </span>
+                        </button>
+
+                        <!-- Dropdown -->
+                        <div id="notif-dropdown"
+                             class="hidden absolute right-0 top-12 w-80 
+                                    bg-white rounded-2xl shadow-2xl 
+                                    border border-gray-100 z-50 overflow-hidden">
+                            <div class="flex items-center justify-between 
+                                        p-4 border-b border-gray-100">
+                                <h3 class="font-semibold text-gray-800 text-sm">
+                                    Notifications
+                                </h3>
+                                <button onclick="marquerToutesLues()"
+                                        class="text-xs text-blue-600 
+                                               hover:text-blue-800 font-medium">
+                                    Tout marquer lu
+                                </button>
+                            </div>
+                            <div id="notif-list" 
+                                 class="max-h-72 overflow-y-auto">
+                                <div class="p-4 text-center text-gray-400 text-sm">
+                                    <i class="fas fa-spinner fa-spin"></i>
+                                </div>
+                            </div>
+                            <div class="p-3 border-t border-gray-100 text-center">
+                                <a href="{% url 'notifications_list' %}"
+                                   class="text-xs text-blue-600 
+                                          hover:text-blue-800 font-medium">
+                                    Voir toutes les notifications →
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Profil -->
+                    <a href="{% url 'profil' %}"
+                       class="flex items-center gap-2 p-2 hover:bg-gray-100 
+                              rounded-xl transition-all duration-200">
+                        <div class="w-8 h-8 bg-red-500 rounded-full 
+                                    flex items-center justify-center 
+                                    text-white font-bold text-xs">
+                            {{ request.user.first_name|first|upper }}{{ request.user.last_name|first|upper }}
+                        </div>
+                        <span class="hidden md:block text-sm 
+                                     font-medium text-gray-700">
+                            {{ request.user.first_name }}
+                        </span>
+                    </a>
+                </div>
+            </div>
+        </header>
+
+        <!-- Zone de contenu scrollable -->
+        <main class="flex-1 overflow-y-auto p-6">
+            {% block admin_content %}{% endblock %}
+        </main>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // ── Date/heure en temps réel ──
+    function updateDateTime() {
+        const now     = new Date();
+        const options = {
+            weekday: 'long',
+            year   : 'numeric',
+            month  : 'long',
+            day    : 'numeric',
+            hour   : '2-digit',
+            minute : '2-digit'
+        };
+        const el = document.getElementById('current-datetime');
+        if (el) {
+            el.textContent = now.toLocaleDateString('fr-FR', options);
+        }
+    }
+    updateDateTime();
+    setInterval(updateDateTime, 60000);
+
+    // ── Sidebar active ──
+    document.querySelectorAll('.sidebar-link').forEach(link => {
+        if (link.href === window.location.href) {
+            link.classList.add('active');
+        }
+    });
+</script>
+{% endblock %}

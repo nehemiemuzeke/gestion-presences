@@ -1,0 +1,101 @@
+{% extends 'dashboard/layout_admin.html' %}
+{% block page_title %}Zone Rouge{% endblock %}
+{% block page_subtitle %}Étudiants à convoquer{% endblock %}
+
+{% block admin_content %}
+
+<div class="bg-red-50 border border-red-200 rounded-2xl p-4 mb-6 
+            flex items-center gap-4">
+    <div class="w-12 h-12 bg-red-100 rounded-xl flex items-center 
+                justify-center flex-shrink-0">
+        <i class="fas fa-exclamation-triangle text-red-600 text-xl"></i>
+    </div>
+    <div>
+        <h3 class="font-bold text-red-800">
+            {{ total }} étudiant{{ total|pluralize }} en zone rouge
+        </h3>
+        <p class="text-red-600 text-sm">
+            Ces étudiants ont dépassé le seuil d'absences autorisé 
+            et doivent être convoqués.
+        </p>
+    </div>
+</div>
+
+<div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+    {% if etudiants_rouge %}
+    <table class="w-full">
+        <thead>
+            <tr class="bg-red-50 border-b border-red-100">
+                <th class="text-left px-6 py-4 text-xs font-semibold text-red-600 uppercase">Étudiant</th>
+                <th class="text-left px-6 py-4 text-xs font-semibold text-red-600 uppercase">Matière</th>
+                <th class="text-center px-6 py-4 text-xs font-semibold text-red-600 uppercase">Absences</th>
+                <th class="text-center px-6 py-4 text-xs font-semibold text-red-600 uppercase">Seuil</th>
+                <th class="text-center px-6 py-4 text-xs font-semibold text-red-600 uppercase">% Absence</th>
+                <th class="text-center px-6 py-4 text-xs font-semibold text-red-600 uppercase">Action</th>
+            </tr>
+        </thead>
+        <tbody class="divide-y divide-red-50">
+            {% for item in etudiants_rouge %}
+            <tr class="hover:bg-red-50 transition-colors">
+                <td class="px-6 py-4">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 bg-red-500 rounded-full flex items-center 
+                                    justify-center text-white font-bold text-sm flex-shrink-0">
+                            {{ item.etudiant.first_name|first|upper }}{{ item.etudiant.last_name|first|upper }}
+                        </div>
+                        <div>
+                            <p class="font-semibold text-gray-800 text-sm">
+                                {{ item.etudiant.nom_complet }}
+                            </p>
+                            <p class="text-xs text-gray-400">{{ item.etudiant.matricule }}</p>
+                        </div>
+                    </div>
+                </td>
+                <td class="px-6 py-4">
+                    <p class="font-semibold text-gray-800 text-sm">{{ item.matiere.nom }}</p>
+                    <p class="text-xs text-gray-400">{{ item.matiere.niveau }}</p>
+                </td>
+                <td class="px-6 py-4 text-center">
+                    <span class="text-lg font-bold text-red-600">
+                        {{ item.nb_absences }}
+                    </span>
+                    <span class="text-gray-400 text-sm">/{{ item.total_seances }}</span>
+                </td>
+                <td class="px-6 py-4 text-center">
+                    <span class="inline-flex items-center justify-center w-8 h-8 
+                                 bg-red-100 text-red-700 rounded-full text-sm font-bold">
+                        {{ item.seuil }}
+                    </span>
+                </td>
+                <td class="px-6 py-4 text-center">
+                    <span class="font-bold text-red-600">{{ item.pct_absence }}%</span>
+                </td>
+                <td class="px-6 py-4 text-center">
+                    <a href="{% url 'etudiant_edit' item.etudiant.pk %}"
+                       class="btn inline-flex items-center gap-1 px-3 py-1.5 
+                              bg-red-600 text-white rounded-lg hover:bg-red-700 
+                              text-xs font-medium">
+                        <i class="fas fa-envelope text-xs"></i>
+                        Convoquer
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <div class="text-center py-16">
+        <div class="w-20 h-20 bg-green-100 rounded-full flex items-center 
+                    justify-center mx-auto mb-4">
+            <i class="fas fa-check-circle text-green-500 text-3xl"></i>
+        </div>
+        <h3 class="text-lg font-semibold text-gray-700 mb-2">
+            Aucun étudiant en zone rouge 🎉
+        </h3>
+        <p class="text-gray-400 text-sm">
+            Tous les étudiants respectent le seuil d'absences autorisé.
+        </p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

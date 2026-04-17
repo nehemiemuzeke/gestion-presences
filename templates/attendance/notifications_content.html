@@ -1,0 +1,75 @@
+<div class="max-w-2xl mx-auto space-y-3">
+
+    {% if notifications %}
+        {% for notif in notifications %}
+        <div class="bg-white rounded-2xl shadow-sm border p-5
+                    {% if not notif.lu %}border-blue-200 bg-blue-50
+                    {% else %}border-gray-100{% endif %}
+                    transition-all hover:shadow-md">
+            <div class="flex items-start gap-4">
+
+                <!-- Icône selon le type -->
+                <div class="w-10 h-10 rounded-xl flex items-center 
+                            justify-center flex-shrink-0
+                            {% if notif.type_notification == 'CONVOCATION' %}bg-red-100
+                            {% elif notif.type_notification == 'ALERTE_ABSENCE' %}bg-orange-100
+                            {% elif notif.type_notification == 'SEANCE_ACTIVE' %}bg-green-100
+                            {% else %}bg-blue-100{% endif %}">
+                    <i class="fas
+                        {% if notif.type_notification == 'CONVOCATION' %}
+                            fa-gavel text-red-600
+                        {% elif notif.type_notification == 'ALERTE_ABSENCE' %}
+                            fa-exclamation-triangle text-orange-600
+                        {% elif notif.type_notification == 'SEANCE_ACTIVE' %}
+                            fa-play-circle text-green-600
+                        {% else %}
+                            fa-info-circle text-blue-600
+                        {% endif %}"></i>
+                </div>
+
+                <!-- Contenu -->
+                <div class="flex-1">
+                    <div class="flex items-start justify-between gap-2">
+                        <h4 class="font-semibold text-gray-800 text-sm">
+                            {{ notif.titre }}
+                        </h4>
+                        <span class="text-xs text-gray-400 flex-shrink-0">
+                            {{ notif.created_at|date:"d/m H:i" }}
+                        </span>
+                    </div>
+                    <p class="text-gray-600 text-sm mt-1">
+                        {{ notif.message }}
+                    </p>
+                    {% if notif.lien %}
+                    <a href="{{ notif.lien }}"
+                       class="inline-flex items-center gap-1 text-xs 
+                              text-blue-600 hover:text-blue-800 mt-2 font-medium">
+                        Voir le détail
+                        <i class="fas fa-arrow-right text-xs"></i>
+                    </a>
+                    {% endif %}
+                </div>
+
+                <!-- Indicateur non lu -->
+                {% if not notif.lu %}
+                <div class="w-2 h-2 bg-blue-500 rounded-full 
+                            flex-shrink-0 mt-2"></div>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+        <div class="text-center py-16">
+            <div class="w-20 h-20 bg-gray-100 rounded-full 
+                        flex items-center justify-center mx-auto mb-4">
+                <i class="fas fa-bell-slash text-gray-400 text-3xl"></i>
+            </div>
+            <h3 class="text-lg font-semibold text-gray-700 mb-2">
+                Aucune notification
+            </h3>
+            <p class="text-gray-400 text-sm">
+                Vous êtes à jour ! Aucune notification pour le moment.
+            </p>
+        </div>
+    {% endif %}
+</div>

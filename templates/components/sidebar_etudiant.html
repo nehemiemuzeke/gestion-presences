@@ -1,0 +1,70 @@
+<aside class="w-64 bg-gradient-to-b from-emerald-700 to-emerald-900 
+              flex flex-col fixed h-full z-30 shadow-2xl">
+
+    <div class="flex items-center gap-3 p-6 border-b border-emerald-600">
+        <div class="w-10 h-10 bg-white rounded-xl flex items-center justify-center">
+            <i class="fas fa-user-graduate text-emerald-700 text-lg"></i>
+        </div>
+        <div>
+            <h1 class="text-white font-bold text-sm">Espace Étudiant</h1>
+            <p class="text-emerald-300 text-xs">Gestion des présences</p>
+        </div>
+    </div>
+
+    <div class="flex items-center gap-3 p-4 mx-3 mt-3 
+                bg-emerald-600 bg-opacity-50 rounded-xl">
+        <div class="w-9 h-9 bg-white rounded-full flex items-center
+                    justify-center text-emerald-700 font-bold text-sm flex-shrink-0">
+            {{ request.user.first_name|first|upper }}{{ request.user.last_name|first|upper }}
+        </div>
+        <div class="overflow-hidden">
+            <p class="text-white text-xs font-semibold truncate">
+                {{ request.user.nom_complet }}
+            </p>
+            <p class="text-emerald-300 text-xs truncate">
+                {{ request.user.matricule }}
+            </p>
+        </div>
+    </div>
+
+    <nav class="flex-1 px-3 py-4 space-y-1">
+        <a href="{% url 'etudiant_dashboard' %}"
+           class="sidebar-link flex items-center gap-3 px-4 py-2.5 rounded-xl
+                  text-emerald-200 hover:bg-emerald-600 hover:text-white
+                  transition-all duration-200 text-sm">
+            <i class="fas fa-home w-5 text-center"></i>
+            <span>Mon espace</span>
+        </a>
+        <a href="{% url 'etudiant_pointer' %}"
+           class="sidebar-link flex items-center gap-3 px-4 py-2.5 rounded-xl
+                  text-emerald-200 hover:bg-emerald-600 hover:text-white
+                  transition-all duration-200 text-sm">
+            <i class="fas fa-map-marker-alt w-5 text-center text-yellow-300"></i>
+            <span class="font-semibold">Pointer ma présence</span>
+        </a>
+        <a href="{% url 'etudiant_historique' %}"
+           class="sidebar-link flex items-center gap-3 px-4 py-2.5 rounded-xl
+                  text-emerald-200 hover:bg-emerald-600 hover:text-white
+                  transition-all duration-200 text-sm">
+            <i class="fas fa-history w-5 text-center"></i>
+            <span>Mon historique</span>
+        </a>
+        <a href="{% url 'profil' %}"
+           class="sidebar-link flex items-center gap-3 px-4 py-2.5 rounded-xl
+                  text-emerald-200 hover:bg-emerald-600 hover:text-white
+                  transition-all duration-200 text-sm">
+            <i class="fas fa-user w-5 text-center"></i>
+            <span>Mon profil</span>
+        </a>
+    </nav>
+
+    <div class="p-3 border-t border-emerald-600">
+        <a href="{% url 'logout' %}"
+           class="flex items-center gap-3 px-4 py-2.5 rounded-xl
+                  text-emerald-400 hover:bg-red-900 hover:bg-opacity-50
+                  hover:text-red-300 transition-all duration-200 text-sm">
+            <i class="fas fa-sign-out-alt w-5 text-center"></i>
+            <span>Déconnexion</span>
+        </a>
+    </div>
+</aside>

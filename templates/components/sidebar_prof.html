@@ -1,0 +1,71 @@
+<aside class="w-64 bg-gradient-to-b from-indigo-800 to-indigo-900 
+              flex flex-col fixed h-full z-30 shadow-2xl">
+
+    <div class="flex items-center gap-3 p-6 border-b border-indigo-700">
+        <div class="w-10 h-10 bg-yellow-400 rounded-xl flex items-center justify-center">
+            <i class="fas fa-chalkboard-teacher text-indigo-900 text-lg"></i>
+        </div>
+        <div>
+            <h1 class="text-white font-bold text-sm">Espace Prof</h1>
+            <p class="text-indigo-300 text-xs">Gestion des présences</p>
+        </div>
+    </div>
+
+    <div class="flex items-center gap-3 p-4 mx-3 mt-3 
+                bg-indigo-700 bg-opacity-50 rounded-xl">
+        <div class="w-9 h-9 bg-yellow-400 rounded-full flex items-center
+                    justify-center text-indigo-900 font-bold text-sm flex-shrink-0">
+            {{ request.user.first_name|first|upper }}{{ request.user.last_name|first|upper }}
+        </div>
+        <div class="overflow-hidden">
+            <p class="text-white text-xs font-semibold truncate">
+                {{ request.user.nom_complet }}
+            </p>
+            <span class="text-xs bg-yellow-400 text-indigo-900 
+                         px-2 py-0.5 rounded-full font-medium">
+                Professeur
+            </span>
+        </div>
+    </div>
+
+    <nav class="flex-1 px-3 py-4 space-y-1">
+        <a href="{% url 'prof_dashboard' %}"
+           class="sidebar-link flex items-center gap-3 px-4 py-2.5 rounded-xl
+                  text-indigo-200 hover:bg-indigo-700 hover:text-white
+                  transition-all duration-200 text-sm">
+            <i class="fas fa-chart-pie w-5 text-center"></i>
+            <span>Tableau de bord</span>
+        </a>
+        <a href="{% url 'prof_seance_creer' %}"
+           class="sidebar-link flex items-center gap-3 px-4 py-2.5 rounded-xl
+                  text-indigo-200 hover:bg-indigo-700 hover:text-white
+                  transition-all duration-200 text-sm">
+            <i class="fas fa-plus-circle w-5 text-center text-green-400"></i>
+            <span>Nouvelle séance</span>
+        </a>
+        <a href="{% url 'prof_seances_list' %}"
+           class="sidebar-link flex items-center gap-3 px-4 py-2.5 rounded-xl
+                  text-indigo-200 hover:bg-indigo-700 hover:text-white
+                  transition-all duration-200 text-sm">
+            <i class="fas fa-list w-5 text-center"></i>
+            <span>Mes séances</span>
+        </a>
+        <a href="{% url 'profil' %}"
+           class="sidebar-link flex items-center gap-3 px-4 py-2.5 rounded-xl
+                  text-indigo-200 hover:bg-indigo-700 hover:text-white
+                  transition-all duration-200 text-sm">
+            <i class="fas fa-user w-5 text-center"></i>
+            <span>Mon profil</span>
+        </a>
+    </nav>
+
+    <div class="p-3 border-t border-indigo-700">
+        <a href="{% url 'logout' %}"
+           class="flex items-center gap-3 px-4 py-2.5 rounded-xl
+                  text-indigo-400 hover:bg-red-900 hover:bg-opacity-50
+                  hover:text-red-300 transition-all duration-200 text-sm">
+            <i class="fas fa-sign-out-alt w-5 text-center"></i>
+            <span>Déconnexion</span>
+        </a>
+    </div>
+</aside>

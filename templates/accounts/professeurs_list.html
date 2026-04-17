@@ -1,0 +1,108 @@
+{% extends 'dashboard/layout_admin.html' %}
+{% block page_title %}Professeurs{% endblock %}
+{% block page_subtitle %}Gestion du corps enseignant{% endblock %}
+
+{% block admin_content %}
+<div class="flex items-center justify-between mb-6">
+    <p class="text-gray-500 text-sm">{{ total }} professeur{{ total|pluralize }}</p>
+    <a href="{% url 'professeur_create' %}"
+       class="btn flex items-center gap-2 px-4 py-2.5 bg-blue-600 
+              text-white rounded-xl hover:bg-blue-700 font-medium text-sm">
+        <i class="fas fa-plus"></i>Nouveau professeur
+    </a>
+</div>
+
+<div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 mb-6">
+    <form method="GET" class="flex gap-3">
+        <div class="flex-1 relative">
+            <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+            <input type="text" name="search" value="{{ search }}"
+                   placeholder="Rechercher un professeur..."
+                   class="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-xl 
+                          focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
+        </div>
+        <button type="submit"
+                class="px-4 py-2.5 bg-blue-600 text-white rounded-xl hover:bg-blue-700 text-sm">
+            Rechercher
+        </button>
+    </form>
+</div>
+
+<div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+    {% if professeurs %}
+    <table class="w-full">
+        <thead>
+            <tr class="bg-gray-50 border-b border-gray-100">
+                <th class="text-left px-6 py-4 text-xs font-semibold text-gray-500 uppercase">Professeur</th>
+                <th class="text-left px-6 py-4 text-xs font-semibold text-gray-500 uppercase">Matricule</th>
+                <th class="text-left px-6 py-4 text-xs font-semibold text-gray-500 uppercase">Email</th>
+                <th class="text-center px-6 py-4 text-xs font-semibold text-gray-500 uppercase">Matières</th>
+                <th class="text-center px-6 py-4 text-xs font-semibold text-gray-500 uppercase">Statut</th>
+                <th class="text-center px-6 py-4 text-xs font-semibold text-gray-500 uppercase">Actions</th>
+            </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-50">
+            {% for prof in professeurs %}
+            <tr class="hover:bg-gray-50 transition-colors">
+                <td class="px-6 py-4">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center 
+                                    justify-center text-white font-bold text-sm flex-shrink-0">
+                            {{ prof.first_name|first|upper }}{{ prof.last_name|first|upper }}
+                        </div>
+                        <div>
+                            <p class="font-semibold text-gray-800 text-sm">{{ prof.nom_complet }}</p>
+                            <p class="text-xs text-gray-400">{{ prof.telephone|default:"Pas de tél." }}</p>
+                        </div>
+                    </div>
+                </td>
+                <td class="px-6 py-4">
+                    <span class="font-mono text-sm text-gray-600">{{ prof.matricule }}</span>
+                </td>
+                <td class="px-6 py-4">
+                    <span class="text-sm text-gray-600">{{ prof.email }}</span>
+                </td>
+                <td class="px-6 py-4 text-center">
+                    <span class="inline-flex items-center justify-center w-8 h-8 
+                                 bg-blue-100 text-blue-700 rounded-full text-sm font-bold">
+                        {{ prof.nb_matieres }}
+                    </span>
+                </td>
+                <td class="px-6 py-4 text-center">
+                    {% if prof.statut == 'ACTIF' %}
+                    <span class="badge bg-green-100 text-green-700">Actif</span>
+                    {% elif prof.statut == 'SUSPENDU' %}
+                    <span class="badge bg-red-100 text-red-700">Suspendu</span>
+                    {% else %}
+                    <span class="badge bg-gray-100 text-gray-700">Inactif</span>
+                    {% endif %}
+                </td>
+                <td class="px-6 py-4">
+                    <div class="flex items-center justify-center gap-2">
+                        <a href="{% url 'professeur_edit' prof.pk %}"
+                           class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">
+                            <i class="fas fa-edit text-sm"></i>
+                        </a>
+                        <a href="{% url 'professeur_delete' prof.pk %}"
+                           class="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors">
+                            <i class="fas fa-trash-alt text-sm"></i>
+                        </a>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <div class="text-center py-16">
+        <i class="fas fa-chalkboard-teacher text-gray-300 text-5xl mb-4"></i>
+        <h3 class="text-lg font-semibold text-gray-700 mb-2">Aucun professeur</h3>
+        <a href="{% url 'professeur_create' %}"
+           class="btn inline-flex items-center gap-2 px-6 py-3 bg-blue-600 
+                  text-white rounded-xl hover:bg-blue-700 font-medium text-sm mt-4">
+            <i class="fas fa-plus"></i>Ajouter un professeur
+        </a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

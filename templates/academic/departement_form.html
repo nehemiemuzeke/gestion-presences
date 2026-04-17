@@ -1,0 +1,133 @@
+{% extends 'dashboard/layout_admin.html' %}
+
+{% block page_title %}
+    {% if departement %}Modifier{% else %}Nouveau{% endif %} Département
+{% endblock %}
+
+{% block admin_content %}
+<div class="max-w-2xl mx-auto">
+    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+
+        <!-- Header -->
+        <div class="bg-gradient-to-r from-blue-600 to-blue-700 p-6">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-white bg-opacity-20 rounded-xl 
+                            flex items-center justify-center">
+                    <i class="fas fa-building text-white"></i>
+                </div>
+                <div>
+                    <h2 class="text-white font-bold text-lg">
+                        {% if departement %}
+                            Modifier : {{ departement.nom }}
+                        {% else %}
+                            Nouveau département
+                        {% endif %}
+                    </h2>
+                    <p class="text-blue-200 text-sm">
+                        Remplissez les informations ci-dessous
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Formulaire -->
+        <form method="POST" class="p-6 space-y-5">
+            {% csrf_token %}
+
+            <!-- Nom -->
+            <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">
+                    Nom du département <span class="text-red-500">*</span>
+                </label>
+                <input type="text" name="nom"
+                       value="{{ departement.nom|default:'' }}"
+                       placeholder="Ex: Département Informatique"
+                       required
+                       class="w-full px-4 py-3 border border-gray-200 rounded-xl
+                              focus:outline-none focus:ring-2 focus:ring-blue-500
+                              focus:border-transparent text-sm transition-all">
+            </div>
+
+            <!-- Code -->
+            <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">
+                    Code <span class="text-red-500">*</span>
+                </label>
+                <input type="text" name="code"
+                       value="{{ departement.code|default:'' }}"
+                       placeholder="Ex: DEPT-INFO"
+                       required
+                       class="w-full px-4 py-3 border border-gray-200 rounded-xl
+                              focus:outline-none focus:ring-2 focus:ring-blue-500
+                              focus:border-transparent text-sm font-mono transition-all
+                              uppercase">
+                <p class="text-xs text-gray-400 mt-1">
+                    Le code sera automatiquement mis en majuscules
+                </p>
+            </div>
+
+            <!-- Responsable -->
+            <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">
+                    Responsable du département
+                </label>
+                <select name="responsable"
+                        class="w-full px-4 py-3 border border-gray-200 rounded-xl
+                               focus:outline-none focus:ring-2 focus:ring-blue-500
+                               focus:border-transparent text-sm bg-white transition-all">
+                    <option value="">-- Sélectionner un responsable --</option>
+                    {% for prof in professeurs %}
+                    <option value="{{ prof.pk }}"
+                        {% if departement.responsable_id == prof.pk %}selected{% endif %}>
+                        {{ prof.nom_complet }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <!-- Description -->
+            <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">
+                    Description
+                </label>
+                <textarea name="description" rows="3"
+                          placeholder="Description du département (optionnel)"
+                          class="w-full px-4 py-3 border border-gray-200 rounded-xl
+                                 focus:outline-none focus:ring-2 focus:ring-blue-500
+                                 focus:border-transparent text-sm transition-all 
+                                 resize-none">{{ departement.description|default:'' }}</textarea>
+            </div>
+
+            <!-- Statut (uniquement en modification) -->
+            {% if departement %}
+            <div class="flex items-center gap-3 p-4 bg-gray-50 rounded-xl">
+                <input type="checkbox" name="is_active" id="is_active"
+                       {% if departement.is_active %}checked{% endif %}
+                       class="w-4 h-4 text-blue-600 rounded">
+                <label for="is_active" class="text-sm font-medium text-gray-700">
+                    Département actif
+                </label>
+            </div>
+            {% endif %}
+
+            <!-- Boutons -->
+            <div class="flex gap-3 pt-2">
+                <a href="{% url 'admin_departements' %}"
+                   class="flex-1 px-4 py-3 bg-gray-100 text-gray-700 
+                          rounded-xl text-center font-medium 
+                          hover:bg-gray-200 transition-colors text-sm">
+                    <i class="fas fa-times mr-2"></i>Annuler
+                </a>
+                <button type="submit"
+                        class="btn flex-1 px-4 py-3 bg-blue-600 text-white 
+                               rounded-xl font-medium hover:bg-blue-700 
+                               transition-colors text-sm flex items-center 
+                               justify-center gap-2">
+                    <i class="fas fa-save"></i>
+                    {% if departement %}Enregistrer les modifications{% else %}Créer{% endif %}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,51 @@
+{% extends 'dashboard/layout_prof.html' %}
+{% block page_title %}Clôturer la séance{% endblock %}
+
+{% block prof_content %}
+<div class="max-w-md mx-auto">
+    <div class="bg-white rounded-2xl shadow-sm border border-red-100 overflow-hidden">
+        <div class="bg-red-50 p-6 border-b border-red-100 text-center">
+            <div class="w-16 h-16 bg-red-100 rounded-full flex items-center 
+                        justify-center mx-auto mb-3">
+                <i class="fas fa-stop-circle text-red-600 text-3xl"></i>
+            </div>
+            <h2 class="text-lg font-bold text-gray-800">Clôturer la séance</h2>
+            <p class="text-gray-500 text-sm mt-1">{{ seance.matiere.nom }}</p>
+        </div>
+        <div class="p-6">
+            <div class="bg-orange-50 border border-orange-200 rounded-xl p-4 mb-6">
+                <p class="text-orange-800 text-sm">
+                    <i class="fas fa-exclamation-triangle mr-2"></i>
+                    En clôturant la séance, tous les étudiants qui n'ont pas pointé
+                    seront définitivement marqués comme <strong>absents</strong>.
+                </p>
+            </div>
+            <div class="grid grid-cols-2 gap-4 mb-6 text-center">
+                <div class="bg-green-50 rounded-xl p-4">
+                    <p class="text-2xl font-bold text-green-600">{{ seance.nombre_presents }}</p>
+                    <p class="text-xs text-gray-500">Présents</p>
+                </div>
+                <div class="bg-red-50 rounded-xl p-4">
+                    <p class="text-2xl font-bold text-red-500">{{ seance.nombre_absents }}</p>
+                    <p class="text-xs text-gray-500">Absents</p>
+                </div>
+            </div>
+            <form method="POST" class="flex gap-3">
+                {% csrf_token %}
+                <a href="{% url 'prof_seance_active' seance.pk %}"
+                   class="flex-1 px-4 py-3 bg-gray-100 text-gray-700 rounded-xl
+                          text-center font-medium hover:bg-gray-200 text-sm">
+                    Annuler
+                </a>
+                <button type="submit"
+                        class="btn flex-1 px-4 py-3 bg-red-600 text-white rounded-xl
+                               font-medium hover:bg-red-700 text-sm
+                               flex items-center justify-center gap-2">
+                    <i class="fas fa-stop-circle"></i>
+                    Confirmer la clôture
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
